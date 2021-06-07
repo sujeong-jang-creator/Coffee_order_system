@@ -121,12 +121,12 @@
                 );
 
                 <strong>insert</strong> all
-                    into menu (menu_id, menu_name, price) values(1, '아메리카노', 4000)
-                    into menu (menu_id, menu_name, price) values(2, '아이스티', 3500)
-                    into menu (menu_id, menu_name, price) values(3, '말차라떼', 5500)
-                    into menu (menu_id, menu_name, price) values(4, '핫초코', 5000)
-                    into menu (menu_id, menu_name, price) values(5, '헤이즐넛', 4500)
-                    into menu (menu_id, menu_name, price) values(6, '바닐라라떼', 4500)
+                    <strong>INTO</strong> menu (menu_id, menu_name, price) values(1, '아메리카노', 4000)
+                    <strong>INTO</strong> menu (menu_id, menu_name, price) values(2, '아이스티', 3500)
+                    <strong>INTO</strong> menu (menu_id, menu_name, price) values(3, '말차라떼', 5500)
+                    <strong>INTO</strong> menu (menu_id, menu_name, price) values(4, '핫초코', 5000)
+                    <strong>INTO</strong> menu (menu_id, menu_name, price) values(5, '헤이즐넛', 4500)
+                    <strong>INTO</strong> menu (menu_id, menu_name, price) values(6, '바닐라라떼', 4500)
                 <strong>select * from</strong> dual;
             </details>
         </div>
@@ -134,12 +134,12 @@
 
     <div class='question'>
         <h3>Mission 02</h3>
-        아래의 조건을 만족시키며 주문을 받아 order_list table을 채우는 함수를 만드세요. <br>
+        아래의 조건을 만족시키며 주문을 받아 order_list table을 채우는 프로시저를 만드세요. <br>
         조건
         1. order_id는 sequence를 정의하여 주문 순서대로 값을 채운다. 
         2. employee_id는 employees 함수의 employee_id와 동일한 형식을 갖는다.
         3. date은 시스템의 현재 날짜를 갖는다.
-        4. employee_id 값을 return 한다.
+        4. 프로시저의 매개변수는 직원 아이디(employee_id), 메뉴 아이디(menu_id), 수량(amount)이다.
         <div class="hi">
             <div style="width: 40%; display: flex; flex-direction: column;">
                 <strong style="margin-left: 10%;">답안 작성</strong>
@@ -149,27 +149,27 @@
             </div>
             <details style="width: 60%;">
                 <summary>모범 답안 확인하기</summary>
-                <strong>create or replace</strong> function make_order(
+                <strong>CREATE OR REPLACE</strong> procedure make_order(
                     v_emp_id order_list.employee_id%type,
-                    v_menu menu.menu_name%type,
-                    v_amount order_list.amount%type );
-                <strong>return</strong> order_list.order_id%type
-                <strong>is</strong>
+                    v_menu_id order_list.menu_id%type,
+                    v_amount order_list.amount%type)
+                <strong>IS</strong>
                     v_order_id order_list.order_id%type;
                     v_date order_list.order_date%type;
-                    v_menu_id order_list.menu_id%type;
-                <strong>begin</strong>
-                    <strong>select</strong> seq_order_no1.nextval, sysdate
-                        into v_order_id, v_date
-                    <strong>from</strong> dual;
-                    <strong>select</strong> menu_id
-                        into v_menu_id
+                    v_menu menu.menu_name%type;
+                <strong>BEGIN</strong>
+                    <strong>SELECT</strong> seq_order_no1.nextval, sysdate
+                        <strong>INTO</strong> v_order_id, v_date
+                    <strong>FROM</strong> dual;
+                    <!-- <strong>SELECT</strong> menu_id
+                        <strong>INTO</strong> v_menu_id
                     <strong>from</strong> menu
-                    <strong>where</strong> menu_name = v_menu;
-                    <strong>insert</strong> into order_list values(v_order_id, v_emp_id, v_menu_id, v_amount, v_date);
-                    <strong>return</strong> v_emp_id;
-                <strong>end;</strong>
+                    <strong>where</strong> menu_name = v_menu; -->
+                    <strong>INSERT</strong> <strong>INTO</strong> order_list values(v_order_id, v_emp_id, v_menu_id, v_amount, v_date);
+                <strong>END;</strong>
                 /
+
+                <strong>EXEC</strong> make_order(100, 1, 5);
             </details>
         </div>
     </div>
@@ -187,21 +187,22 @@
             </div>
             <details style="width: 60%;">
                 <summary>모범 답안 확인하기</summary>
-                <strong>execute</strong> update_order('order_id', 'modified_menu', 'modified_amount');
-                drop procedure update_order;
-                <strong>create or replace</strong> procedure update_order
+                <strong>DROP</strong> procedure update_order;
+                <strong>CREATE OR REPLACE</strong> procedure update_order
                 (
                     v_order_id order_list.order_id%type,
                     v_menu_id order_list.menu_id%type,
                     v_amount order_list.amount%type
                 )
-                <strong>is</strong>
-                <strong>begin</strong>
-                <strong>update</strong> order_list
-                <strong>set</strong> menu_id = v_menu_id, amount = v_amount
-                <strong>where</strong> order_id = v_order_id
-                <strong>end;</strong>
+                <strong>IS</strong>
+                <strong>BEGIN</strong>
+                <strong>UPDATE</strong> order_list
+                <strong>SET</strong> menu_id = v_menu_id, amount = v_amount
+                <strong>WHERE</strong> order_id = v_order_id
+                <strong>END;</strong>
                 /
+
+                <strong>EXEC</strong> update_order('order_id', 'modified_menu', 'modified_amount');
             </details>
         </div>
     </div>
@@ -228,18 +229,18 @@
                 <strong>FROM</strong> employees e, order_list o, departments d
                 <strong>WHERE</strong> e.employee_id = o.employee_id <strong>AND</strong> d.department_id = e.department_id;
                 
-                <strong>CREATE TABLE</strong> mmp AS
+                <strong>CREATE TABLE</strong> mmp <strong>AS</strong>
                 <strong>SELECT</strong> tmp.menu_id, tmp.amount, tmp.department_id, menu.price
                 <strong>FROM</strong> menu, tmp
                 <strong>WHERE</strong> menu.menu_id = tmp.menu_id;
                 
                 <strong>DROP</strong> view daily_stats;
                 
-                <strong>CREATE</strong> view daily_stats AS
+                <strong>CREATE</strong> view daily_stats <strong>AS</strong>
                 <strong>SELECT</strong> tmp.order_date, tmp.department_name, sum(tmp.amount) <strong>AS</strong> total_amount, 
                             sum(mmp.price * tmp.amount) <strong>AS</strong> total_price
                 <strong>FROM</strong> mmp, tmp
-                <strong>WHERE</strong>  mmp.department_id <strong>IN</strong> (SELECT mmp.department_id FROM mmp)
+                <strong>WHERE</strong>  mmp.department_id <strong>IN</strong> (<strong>SELECT</strong> mmp.department_id <strong>FROM</strong> mmp)
                 <strong>GROUP BY</strong> tmp.order_date, tmp.department_name
                 <strong>ORDER BY</strong> tmp.order_date <strong>DESC</strong>;
                 
