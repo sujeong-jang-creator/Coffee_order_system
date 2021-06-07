@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    body {
+        font-family: 'Nanum Gothic', sans-serif;
+        margin: 2%;
+    }
+
+    h1 {
+        margin: 1rem;
+    }
+
+    details {
+        padding: 1rem;
+        white-space: pre-wrap;
+    }
+
+    .question {
+        border: solid 1px;
+        white-space: pre-wrap;
+        padding-left: 3%;
+        margin: 2%;
+    }
+
+    .hi {
+        display: flex;
+    }
+
+    .noresize {
+        resize: none;
+        /* 사용자 임의 변경 불가 */
+    }
+
+    table, th, td {
+        border: 1px solid black;
+    }
+</style>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALPHACA</title>
+</head>
+
+<body>
+    <h1>사내커피숍 오픈</h1>
+    <p style="margin-left: 2%;">
+        플레이데이터 회사에서 사내커피숍 오픈을 준비하고 있습니다. <br>
+        우리는 직접 사내카페로 가지 않고도, 전산상으로 커피를 주문할 수 있는 시스템 제작을 의뢰받았습니다. <br>
+        따라서, 시스템에 필요한 DB를 구축하려합니다. <br>
+        <br>
+        <strong>주의 사항 : hr 계정 사용하세요.</strong>
+    </p>
+    <div class='question'>
+        <h3>Mission 01</h3>
+        기존에 가지고 있지 않은 새로운 데이터를 추가하기 위한 TABLE을 제작해야 합니다.
+        아래와 같은 테이블을 제작하고, 메뉴 정보를 입력해주세요.
+        <div style="display: flex;">
+
+            <img src="./db01.PNG"/ width="45%">
+            <table style="margin-left: 3%;">
+                <tr>
+                    <th>MENU_ID</th>
+                    <th>MENU_NAME</th>
+                    <th>PRICE</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>아메리카노</td>
+                    <td>4000</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>아이스티</td>
+                    <td>3500</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>말차라떼</td>
+                <td>5500</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>핫초코</td>
+                <td>5000</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>헤이즐넛</td>
+                <td>4500</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>바닐라라떼</td>
+                <td>4500</td>
+            </tr>
+        </table>
+    </div>
+        <div class="hi">
+            <div style="width: 40%; display: flex; flex-direction: column;">
+                <strong style="margin-left: 10%;">답안 작성</strong>
+                <textarea class="noresize"
+                    style="margin-left: 10%; width: 75%; height: 400px; font-size: 22px;"></textarea>
+
+            </div>
+            <details style="width: 60%;">
+                <summary>모범 답안 확인하기</summary>
+                <strong>create table</strong> menu (
+                    menu_id number(3) primary key,
+                    menu_name varchar2(20) not null,
+                    price number(5) not null
+                );
+
+                <strong>create table</strong> order_list (
+                    order_id number(3) primary key,
+                    employee_id number(6) references employees(employee_id),
+                    menu_id number(3) references menu(menu_id),
+                    amount number(3) not null,
+                    order_date date
+                );
+
+                <strong>insert</strong> all
+                    into menu (menu_id, menu_name, price) values(1, '아메리카노', 4000)
+                    into menu (menu_id, menu_name, price) values(2, '아이스티', 3500)
+                    into menu (menu_id, menu_name, price) values(3, '말차라떼', 5500)
+                    into menu (menu_id, menu_name, price) values(4, '핫초코', 5000)
+                    into menu (menu_id, menu_name, price) values(5, '헤이즐넛', 4500)
+                    into menu (menu_id, menu_name, price) values(6, '바닐라라떼', 4500)
+                <strong>select * from</strong> dual;
+            </details>
+        </div>
+    </div>
+
+    <div class='question'>
+        <h3>Mission 02</h3>
+        아래의 조건을 만족시키며 주문을 받아 order_list table을 채우는 함수를 만드세요. <br>
+        조건
+        1. order_id는 sequence를 정의하여 주문 순서대로 값을 채운다. 
+        2. employee_id는 employees 함수의 employee_id와 동일한 형식을 갖는다.
+        3. date은 시스템의 현재 날짜를 갖는다.
+        4. employee_id 값을 return 한다.
+        <div class="hi">
+            <div style="width: 40%; display: flex; flex-direction: column;">
+                <strong style="margin-left: 10%;">답안 작성</strong>
+                <textarea class="noresize"
+                    style="margin-left: 10%; width: 75%; height: 400px; font-size: 22px;"></textarea>
+
+            </div>
+            <details style="width: 60%;">
+                <summary>모범 답안 확인하기</summary>
+                <strong>create or replace</strong> function make_order(
+                    v_emp_id order_list.employee_id%type,
+                    v_menu menu.menu_name%type,
+                    v_amount order_list.amount%type );
+                <strong>return</strong> order_list.order_id%type
+                <strong>is</strong>
+                    v_order_id order_list.order_id%type;
+                    v_date order_list.order_date%type;
+                    v_menu_id order_list.menu_id%type;
+                <strong>begin</strong>
+                    <strong>select</strong> seq_order_no1.nextval, sysdate
+                        into v_order_id, v_date
+                    <strong>from</strong> dual;
+                    <strong>select</strong> menu_id
+                        into v_menu_id
+                    <strong>from</strong> menu
+                    <strong>where</strong> menu_name = v_menu;
+                    <strong>insert</strong> into order_list values(v_order_id, v_emp_id, v_menu_id, v_amount, v_date);
+                    <strong>return</strong> v_emp_id;
+                <strong>end;</strong>
+                /
+            </details>
+        </div>
+    </div>
+    
+    <div class='question'>
+        <h3>Mission 03</h3>
+        Mission 2번에서 주문한 내역에서 메뉴명과 가격을 수정하는 작업을 수행하는 프로시저를 만드세요.<br>
+        
+        <div class="hi">
+            <div style="width: 40%; display: flex; flex-direction: column;">
+                <strong style="margin-left: 10%;">답안 작성</strong>
+                <textarea class="noresize"
+                    style="margin-left: 10%; width: 75%; height: 400px; font-size: 22px;"></textarea>
+
+            </div>
+            <details style="width: 60%;">
+                <summary>모범 답안 확인하기</summary>
+                <strong>execute</strong> update_order('order_id', 'modified_menu', 'modified_amount');
+
+                <strong>create or replace</strong> procedure update_order
+                (
+                    order_id order.order_id%type,
+                    v_menu_id order.menu_id%type,
+                    v_amount order.amount%type
+                )
+                <strong>is</strong>
+                <strong>begin</strong>
+                <strong>select</strong> order_id, menu_id, amount
+                        into v_order_id, v_menu_id, v_amount
+                    <strong>from</strong> order
+                    <strong>set</strong> menu_id = v_menu_id, amount_id = v_amount
+                    <strong>where</strong> order_id = v_order_id
+                <strong>end;</strong>
+                /
+            </details>
+        </div>
+    </div>
+
+    <div class='question'>
+        <h3>Mission 04</h3>
+        부서별로 하루에 주문한 금액의 총 합을 기준으로 TOP3를 선별하세요. 
+        단, 주문수량도 함께 출력해 주세요.<br>
+        
+        <div class="hi">
+            <div style="width: 40%; display: flex; flex-direction: column;">
+                <strong style="margin-left: 10%;">답안 작성</strong>
+                <textarea class="noresize"
+                    style="margin-left: 10%; width: 75%; height: 400px; font-size: 22px;"></textarea>
+
+            </div>
+            <details style="width: 60%;">
+                <summary>모범 답안 확인하기</summary>
+                <strong>CREATE</strong> view order_list_v AS SELECT * FROM order_list;
+                <strong>SELECT</strong> order_date, department_id, amount
+                <strong>FROM</strong> departments, order_list
+                <strong>WHERE</strong> amount IN (SELECT department_id, sum(amount) 
+                    <storng>FROM</strong> order_list
+                    <strong>GROUP BY</strong> department_id);
+            </details>
+        </div>
+    </div>
+    
+    <div class='question'>
+        <h3>Mission 05</h3>
+        COMING SOON...
+        
+        <div class="hi">
+            <div style="width: 40%; display: flex; flex-direction: column;">
+                <strong style="margin-left: 10%;">답안 작성</strong>
+                <textarea class="noresize"
+                    style="margin-left: 10%; width: 75%; height: 400px; font-size: 22px;"></textarea>
+
+            </div>
+            <details style="width: 60%;">
+                <summary>모범 답안 확인하기</summary>
+                COMING SOON...
+            </details>
+        </div>
+    </div>
+</body>
+
+</html>
