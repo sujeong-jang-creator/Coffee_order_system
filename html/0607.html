@@ -106,13 +106,13 @@
             </div>
             <details style="width: 60%;">
                 <summary>모범 답안 확인하기</summary>
-                <strong>create table</strong> menu (
+                <strong>CREATE TABLE</strong> menu (
                     menu_id number(3) primary key,
                     menu_name varchar2(20) not null,
                     price number(5) not null
                 );
 
-                <strong>create table</strong> order_list (
+                <strong>CREATE TABLE</strong> order_list (
                     order_id number(3) primary key,
                     employee_id number(6) references employees(employee_id),
                     menu_id number(3) references menu(menu_id),
@@ -120,14 +120,14 @@
                     order_date date
                 );
 
-                <strong>insert</strong> all
+                <strong>INSERT</strong> all
                     <strong>INTO</strong> menu (menu_id, menu_name, price) values(1, '아메리카노', 4000)
                     <strong>INTO</strong> menu (menu_id, menu_name, price) values(2, '아이스티', 3500)
                     <strong>INTO</strong> menu (menu_id, menu_name, price) values(3, '말차라떼', 5500)
                     <strong>INTO</strong> menu (menu_id, menu_name, price) values(4, '핫초코', 5000)
                     <strong>INTO</strong> menu (menu_id, menu_name, price) values(5, '헤이즐넛', 4500)
                     <strong>INTO</strong> menu (menu_id, menu_name, price) values(6, '바닐라라떼', 4500)
-                <strong>select * from</strong> dual;
+                <strong>SELECT * from</strong> dual;
             </details>
         </div>
     </div>
