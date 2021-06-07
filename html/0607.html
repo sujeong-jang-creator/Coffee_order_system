@@ -188,20 +188,18 @@
             <details style="width: 60%;">
                 <summary>모범 답안 확인하기</summary>
                 <strong>execute</strong> update_order('order_id', 'modified_menu', 'modified_amount');
-
+                drop procedure update_order;
                 <strong>create or replace</strong> procedure update_order
                 (
-                    order_id order.order_id%type,
-                    v_menu_id order.menu_id%type,
-                    v_amount order.amount%type
+                    v_order_id order_list.order_id%type,
+                    v_menu_id order_list.menu_id%type,
+                    v_amount order_list.amount%type
                 )
                 <strong>is</strong>
                 <strong>begin</strong>
-                <strong>select</strong> order_id, menu_id, amount
-                        into v_order_id, v_menu_id, v_amount
-                    <strong>from</strong> order
-                    <strong>set</strong> menu_id = v_menu_id, amount_id = v_amount
-                    <strong>where</strong> order_id = v_order_id
+                <strong>update</strong> order_list
+                <strong>set</strong> menu_id = v_menu_id, amount = v_amount
+                <strong>where</strong> order_id = v_order_id
                 <strong>end;</strong>
                 /
             </details>
