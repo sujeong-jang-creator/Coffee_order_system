@@ -58,7 +58,7 @@
         아래와 같은 테이블을 제작하고, 메뉴 정보를 입력해주세요.
         <div style="display: flex;">
 
-            <img src="./db01.PNG"/ width="45%">
+            <img src="./db01.PNG" width="45%">
             <table style="margin-left: 3%;">
                 <tr>
                     <th>MENU_ID</th>
@@ -220,12 +220,30 @@
             </div>
             <details style="width: 60%;">
                 <summary>모범 답안 확인하기</summary>
-                <strong>CREATE</strong> view order_list_v AS SELECT * FROM order_list;
-                <strong>SELECT</strong> order_date, department_id, amount
-                <strong>FROM</strong> departments, order_list
-                <strong>WHERE</strong> amount IN (SELECT department_id, sum(amount) 
-                    <storng>FROM</strong> order_list
-                    <strong>GROUP BY</strong> department_id);
+                <strong>DROP TABLE</strong> tmp;
+                <strong>DROP TABLE</strong> mmp;
+                
+                <strong>CREATE TABLE</strong> tmp <strong>AS</strong>
+                <strong>SELECT</strong> d.department_name, e.department_id, o.amount, o.menu_id, o.order_date
+                <strong>FROM</strong> employees e, order_list o, departments d
+                <strong>WHERE</strong> e.employee_id = o.employee_id <strong>AND</strong> d.department_id = e.department_id;
+                
+                <strong>CREATE TABLE</strong> mmp AS
+                <strong>SELECT</strong> tmp.menu_id, tmp.amount, tmp.department_id, menu.price
+                <strong>FROM</strong> menu, tmp
+                <strong>WHERE</strong> menu.menu_id = tmp.menu_id;
+                
+                <strong>DROP</strong> view daily_stats;
+                
+                <strong>CREATE</strong> view daily_stats AS
+                <strong>SELECT</strong> tmp.order_date, tmp.department_name, sum(tmp.amount) <strong>AS</strong> total_amount, 
+                            sum(mmp.price * tmp.amount) <strong>AS</strong> total_price
+                <strong>FROM</strong> mmp, tmp
+                <strong>WHERE</strong>  mmp.department_id <strong>IN</strong> (SELECT mmp.department_id FROM mmp)
+                <strong>GROUP BY</strong> tmp.order_date, tmp.department_name
+                <strong>ORDER BY</strong> tmp.order_date <strong>DESC</strong>;
+                
+                <strong>SELECT * FROM</strong> daily_stats;
             </details>
         </div>
     </div>

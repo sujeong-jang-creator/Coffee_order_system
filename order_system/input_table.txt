@@ -1,6 +1,6 @@
 options(load=-1, errors=-1)
 load data
-infile 'C:\Users\Playdata\Desktop\Mini Project\order_system\coffee_order_system - order.csv'
+infile 'C:\Coffee_order_system\order_system\coffee_order_system - order.csv'
 append into table order_list
 fields terminated by ','  
 (

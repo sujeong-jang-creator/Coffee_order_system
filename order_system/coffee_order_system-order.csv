@@ -1,0 +1,57 @@
+
+SQL*Loader: Release 11.2.0.2.0 - Production on 월 6월 7 23:43:49 2021
+
+Copyright (c) 1982, 2009, Oracle and/or its affiliates.  All rights reserved.
+
+Control File:   input_table.txt
+Data File:      C:\Coffee_order_system\order_system\coffee_order_system - order.csv
+  Bad File:     coffee_order_system - order.bad
+  Discard File:  none specified
+ 
+ (Allow all discards)
+
+Number to load: ALL
+Number to skip: 0
+Errors allowed: ALL
+Bind array:     64 rows, maximum of 256000 bytes
+Continuation:    none specified
+Path used:      Conventional
+
+Table ORDER_LIST, loaded from every logical record.
+Insert option in effect for this table: APPEND
+
+   Column Name                  Position   Len  Term Encl Datatype
+------------------------------ ---------- ----- ---- ---- ---------------------
+ORDER_ID                            FIRST     *   ,       CHARACTER            
+EMPLOYEE_ID                          NEXT     *   ,       CHARACTER            
+MENU_ID                              NEXT     *   ,       CHARACTER            
+AMOUNT                               NEXT     *   ,       CHARACTER            
+ORDER_DATE                           NEXT     *   ,       DATE YYYY.MM.DD      
+
+Record 1: Rejected - Error on table ORDER_LIST, column ORDER_ID.
+ORA-01722: invalid number
+
+Record 2: Rejected - Error on table ORDER_LIST.
+ORA-00001: unique constraint (HR.SYS_C007041) violated
+
+
+Table ORDER_LIST:
+  83 Rows successfully loaded.
+  2 Rows not loaded due to data errors.
+  0 Rows not loaded because all WHEN clauses were failed.
+  0 Rows not loaded because all fields were null.
+
+
+Space allocated for bind array:                  82560 bytes(64 rows)
+Read   buffer bytes: 1048576
+
+Total logical records skipped:          0
+Total logical records read:            85
+Total logical records rejected:         2
+Total logical records discarded:        0
+
+Run began on 월 6월  07 23:43:49 2021
+Run ended on 월 6월  07 23:43:50 2021
+
+Elapsed time was:     00:00:00.29
+CPU time was:         00:00:00.04
