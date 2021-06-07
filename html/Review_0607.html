@@ -270,7 +270,24 @@
             </div>
             <details style="width: 60%;">
                 <summary>모범 답안 확인하기</summary>
-                COMING SOON...
+                <strong>SELECT</strong> *
+                <strong>FROM</strong> (
+                    <strong>SELECT</strong> o.order_date, d.department_id, sum(o.amount) <strong>AS</strong> "COUNT",
+                         sum(m.price*o.amount) <strong>AS</strong> "TOTAL_PRICE", RANK()
+                        <strong>OVER</strong> (
+                            <strong>PARTITION BY</strong> o.order_date
+                            <strong>ORDER BY</strong> o.order_date, d.department_id
+                        ) <strong>AS</strong> ranking
+                    <strong>FROM</strong> order_list o
+                    <strong>INNER JOIN</strong> employees e
+                        <strong>ON</strong> o.employee_id = e.employee_id
+                    <strong>INNER JOIN</strong> departments d
+                        <strong>ON</strong> e.department_id = d.department_id
+                    <strong>INNER JOIN</strong> menu m
+                        <strong>ON</strong> o.menu_id = m.menu_id
+                    <strong>GROUP BY</strong> o.order_date, d.department_id
+                )
+                <strong>WHERE RANKING <= 3;
             </details>
         </div>
     </div>
